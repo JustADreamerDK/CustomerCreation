@@ -10,34 +10,19 @@ import logo from "./images/Logo-line.png";
 import WOCustomerNumber from "./WOCustomerNumber";
 import WCustomerNumber from "./WCustomerNumber";
 import CreateUser from "./Create-user";
+import Login from "./Login";
 
 function Customer() {
   return (
     <Router>
       <Switch>
         <Route path="/without">
-        <header>
+          <header>
+            <div>
               <img className="logo" src={logo} />
               <h1>Kundenummer</h1>
-              <nav style={{ display: "flex" }}>
-                <Link
-                  to="/"
-                  style={{
-                    color: "black",
-                    textDecoration: "none",
-                    marginRight: "10px",
-                  }}
-                >
-                  Forside
-                </Link>
-                <Link
-                  to="/without"
-                  style={{ color: "black", textDecoration: "none" }}
-                >
-                  Tabel
-                </Link>
-              </nav>
-            </header>
+            </div>
+          </header>
 
           <div className="content-wrapper">
             <div className="content-container">
@@ -55,28 +40,28 @@ function Customer() {
         </Route>
 
         <Route path="/with">
-        <header>
-              <img className="logo" src={logo} />
-              <h1>Kundenummer</h1>
-              <nav style={{ display: "flex" }}>
-                <Link
-                  to="/"
-                  style={{
-                    color: "black",
-                    textDecoration: "none",
-                    marginRight: "10px",
-                  }}
-                >
-                  Forside
+          <header>
+            <img className="logo" src={logo} />
+            <h1>Kundenummer</h1>
+            <nav style={{ display: "flex" }}>
+              <Link
+                to="/"
+                style={{
+                  color: "black",
+                  textDecoration: "none",
+                  marginRight: "10px",
+                }}
+              >
+                Forside
                 </Link>
-                <Link
-                  to="/without"
-                  style={{ color: "black", textDecoration: "none" }}
-                >
-                  Tabel
+              <Link
+                to="/without"
+                style={{ color: "black", textDecoration: "none" }}
+              >
+                Tabel
                 </Link>
-              </nav>
-            </header>
+            </nav>
+          </header>
           <div className="content-wrapper">
             <div className="content-container">
               <nav>
@@ -93,7 +78,7 @@ function Customer() {
         </Route>
 
         <Route path="/">
-          <CreateUser />
+          <Login />
         </Route>
       </Switch>
     </Router>

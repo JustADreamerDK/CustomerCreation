@@ -1,34 +1,40 @@
 import React from "react";
-import emailjs from "emailjs-com";
 import { Formik, Field } from "formik";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./styles/style.css";
 import logo from "./images/Logo-line.png";
-import Customer from "./Customer";
+import Login from "./Login";
 import axios from "axios";
 
 function reload() {
   window.location.reload();
 }
 
-class CreateUserTwo extends React.Component {
+class CreateUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       button: true,
       debitor_addresses: [],
-      name_One: "",
+      name: "",
       name_Two: "",
-      address_One: "",
+      address: "",
       address_Two: "",
+      country: "",
       zipCode: "",
       city: "",
-      country: "",
-      cvr: "",
       phone: "",
+      fax: "",
       mail: "",
+      contact: "",
+      cvr: "",
+      warehouse_item_group: "DEFAULT",
+      container_contact: "",
       debitor: false,
-      debitor_Address_Id: "2",
+      kundegruppe_One: "",
+      kundegruppe_Two: "",
+      reason_mandatory: "",
+      mail_skabelon: "",
     };
     this.checkbox = this.checkbox.bind(this);
     this.submitHandler = this.submitHandler.bind(this);
@@ -41,7 +47,7 @@ class CreateUserTwo extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`https://api1.aagroup.dk/api/katja/address`).then((res) => {
+    axios.get(`http://10.10.0.54:6070/api/customer-creation/address`).then((res) => {
       const debitor_addresses = res.data;
       this.setState({ debitor_addresses });
     });
@@ -57,27 +63,31 @@ class CreateUserTwo extends React.Component {
 
   submitHandler = (e) => {
     e.preventDefault();
-    console.log(this.state);
-
-    emailjs
-    .sendForm(
-      "service_kundeoprettelse",
-      "template_rjsk31i",
-      e.target,
-      "user_v7jcondrSF6KID1z4l296"
-    )
-    .then(
-      (result) => {
-        console.log(result.text);
-        new Promise((resolve) => setTimeout(resolve, 500));
-      },
-      (error) => {
-        console.log(error.text);
-      }
-    );
 
     axios
-      .post("https://api1.aagroup.dk/api/katja/", this.state)
+      .post("http://10.10.0.54:6070/api/customer-creation/",
+        {
+          name_One: this.state.name,
+          name_Two: this.state.name_Two,
+          address_One: this.state.address,
+          address_Two: this.state.address_Two,
+          zipCode: this.state.zipCode,
+          city: this.state.city,
+          country: this.state.country.split(",")[0],
+          language: this.state.country.split(",")[1],
+          ein: this.state.cvr,
+          phone: this.state.phone,
+          fax: this.state.fax,
+          mail: this.state.mail,
+          warehouseItemGroup: this.state.warehouse_item_group,
+          containerContact: this.state.container_contact,
+          isDebitor: this.state.debitor,
+          customerGroupOne: this.state.kundegruppe_One,
+          customerGroupTwo: this.state.kundegruppe_Two,
+          reasonMandatory: this.state.reason_mandatory,
+          mailTemplate: this.state.mail_skabelon
+        }
+      )
       .then((respone) => {
         console.log(respone);
       })
@@ -93,13 +103,12 @@ class CreateUserTwo extends React.Component {
       ? "Send til oprettelse"
       : "Sendt...";
     const {
-      name_One,
+      name,
       name_Two,
-      address_One,
+      address,
       address_Two,
       zipCode,
       city,
-      country,
       cvr,
       phone,
       mail,
@@ -107,32 +116,16 @@ class CreateUserTwo extends React.Component {
     return (
       <Router>
         <Switch>
-          <Route path="/without">
-            <Customer />
+          <Route path="/Login">
+            <Login />
           </Route>
 
           <Route path="/">
             <header>
-              <img className="logo" src={logo} />
-              <h1>Kundenummer</h1>
-              <nav style={{ display: "flex" }}>
-                <Link
-                  to="/"
-                  style={{
-                    color: "black",
-                    textDecoration: "none",
-                    marginRight: "10px",
-                  }}
-                >
-                  Forside
-                </Link>
-                <Link
-                  to="/without"
-                  style={{ color: "black", textDecoration: "none" }}
-                >
-                  Tabel
-                </Link>
-              </nav>
+              <div>
+                <img className="logo" src={logo} />
+                <h1>Kundenummer</h1>
+              </div>
             </header>
 
             <div className="create-user content-wrapper">
@@ -190,11 +183,11 @@ class CreateUserTwo extends React.Component {
                             id="nameOne"
                             placeholder="Navn 1"
                             type="text"
-                            name="name_One"
-                            value={name_One}
+                            name="name"
+                            value={name}
                             onChange={this.changeHandler}
                             onBlur={handleBlur}
-                            required
+                          //required
                           />
                         </div>
 
@@ -221,11 +214,11 @@ class CreateUserTwo extends React.Component {
                             id="adressOne"
                             placeholder="Adresse 1"
                             type="text"
-                            name="address_One"
-                            value={address_One}
+                            name="address"
+                            value={address}
                             onChange={this.changeHandler}
                             onBlur={handleBlur}
-                            required
+                          //required
                           />
                         </div>
 
@@ -257,7 +250,7 @@ class CreateUserTwo extends React.Component {
                             onChange={this.changeHandler}
                             onBlur={handleBlur}
                             min="1"
-                            required
+                          //required
                           />
                         </div>
 
@@ -273,11 +266,11 @@ class CreateUserTwo extends React.Component {
                             value={city}
                             onChange={this.changeHandler}
                             onBlur={handleBlur}
-                            required
+                          //required
                           />
                         </div>
 
-                        <div className="form-line">
+                        {/* <div className="form-line">
                           <label htmlFor="name" style={{ display: "block" }}>
                             Landekode
                           </label>
@@ -289,8 +282,43 @@ class CreateUserTwo extends React.Component {
                             value={country}
                             onChange={this.changeHandler}
                             onBlur={handleBlur}
-                            required
+                            //required
                           />
+                        </div> */}
+
+                        <div className="form-line">
+                          <label htmlFor="name" style={{ display: "block" }}>
+                            Land
+                          </label>
+                          <select
+                            id="country"
+                            className="country"
+                            name="country"
+                            multiple={false}
+                            onChange={this.changeHandler}
+                          >
+                            <option value="">Vælg</option>
+                            <option value="DK,DAN">Danmark</option>
+                            <option value="SE,SVE">Sverige</option>
+                            <option value="NO,NOR">Norge</option>
+                            <option value="FI,ENG">Finland</option>
+                            <option value="NL,NLD">Holland</option>
+                            <option value="GB,ENG">England</option>
+                            <option value="DE,DEU">Tyskland</option>
+                            <option value="FR,FRA">Frankrig</option>
+                            <option value="ES,SPA">Spanien</option>
+                            <option value="AT,DEU">Østrig</option>
+                            <option value="IT,ITA">Italien</option>
+                            <option value="LU,ENG">Luxembourg</option>
+                            <option value="BE,ENG">Belgien</option>
+                            <option value="CH,DEU">Schweiz</option>
+                            <option value="CZ,ENG">Tjekkiet</option>
+                            <option value="PL,PLK">Polen</option>
+                            <option value="HU,ENG">Ungarn</option>
+                            <option value="PT,ENG">Portugal</option>
+                            <option value="RO,ENG">Rumænien</option>
+                            <option value='BG,ENG'>Bulgarien</option>
+                          </select>
                         </div>
 
                         <div className="form-line">
@@ -306,7 +334,7 @@ class CreateUserTwo extends React.Component {
                             onChange={this.changeHandler}
                             onBlur={handleBlur}
                             min="1"
-                            required
+                          //required
                           />
                         </div>
 
@@ -323,7 +351,7 @@ class CreateUserTwo extends React.Component {
                             onChange={this.changeHandler}
                             onBlur={handleBlur}
                             min="1"
-                            required
+                          //required
                           />
                         </div>
 
@@ -339,7 +367,7 @@ class CreateUserTwo extends React.Component {
                             name="mail"
                             onChange={this.changeHandler}
                             onBlur={handleBlur}
-                            required
+                          //required
                           />
                         </div>
 
@@ -355,9 +383,9 @@ class CreateUserTwo extends React.Component {
                         </label>
 
                         <select
-                          id="adress"
+                          id="kundegruppe_One"
                           className="adress"
-                          name="debitor_Address_Id"
+                          name="kundegruppe_One"
                           multiple={false}
                           onChange={this.changeHandler}
                         >
@@ -367,46 +395,13 @@ class CreateUserTwo extends React.Component {
                             (debitor_address) => (
                               <option
                                 key={debitor_address.id}
-                                value={debitor_address.id}
+                                value={debitor_address.customerGroup}
                               >
-                                {debitor_address.address}
+                                {debitor_address.debitorAddress}
                               </option>
                             )
                           )}
                         </select>
-
-                        <div className="form-line" style={{ display: "none" }}>
-                          <textarea
-                            name="message"
-                            id="message"
-                            value={
-                              this.state.name_One +
-                              ", " +
-                              this.state.name_Two +
-                              ", " +
-                              this.state.address_One +
-                              ", " +
-                              this.state.address_Two +
-                              ", " +
-                              this.state.zipCode +
-                              ", " +
-                              this.state.city +
-                              ", " +
-                              this.state.country +
-                              ", " +
-                              this.state.cvr +
-                              ", " +
-                              this.state.phone +
-                              ", " +
-                              this.state.mail +
-                              ", " +
-                              this.state.debitor +
-                              ", " +
-                              this.state.debitor_Address_Id
-                            }
-                            readOnly
-                          ></textarea>
-                        </div>
 
                         <button
                           className="submit"
@@ -428,4 +423,4 @@ class CreateUserTwo extends React.Component {
   }
 }
 
-export default CreateUserTwo;
+export default CreateUser;

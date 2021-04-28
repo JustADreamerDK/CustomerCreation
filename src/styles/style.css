@@ -37,6 +37,19 @@ header h1 {
   font-size: 1.5rem;
 }
 
+header div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+header h3 {
+  cursor: pointer;
+}
+
 .content-wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -97,7 +110,8 @@ button {
 .create-form .form-line [type="text"],
 .create-form .form-line [type="number"],
 .create-form .form-line [type="email"],
-.create-form .form-line [type="tel"] {
+.create-form .form-line [type="tel"],
+.create-form .form-line select {
   width: 200px;
   margin-left: 20px;
 }
@@ -142,6 +156,7 @@ nav .active button {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  margin-top: 1em;
 }
 
 .table-wrapper h2 {
@@ -192,19 +207,30 @@ table td:last-child {
   padding: 5px;
 }
 
+.login-submit {
+  margin-top: 10px;
+}
+
+.add-number {
+  margin: 1em 0 2em 1em;
+}
+
 /* Tablet */
 @media only screen and (min-width: 767px) {
   header {
-    -webkit-box-pack: start;
-        -ms-flex-pack: start;
-            justify-content: flex-start;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
+  header h3 {
+    margin: 0px 4rem;
   }
 }
 
 /* Desktop */
 @media only screen and (min-width: 851px) {
   .table-content {
-    width: 99vw;
+    width: 98vw;
   }
 }
 /*# sourceMappingURL=style.css.map */

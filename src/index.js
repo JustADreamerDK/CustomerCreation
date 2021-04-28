@@ -1,12 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./styles/style.css";
-import Customer from "./Customer";
+import Login from "./Login";
+import CreateUser from "./Create-user"
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Customer />
+    <CreateUser />
   </React.StrictMode>,
   document.getElementById("root")
 );
