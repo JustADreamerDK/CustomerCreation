@@ -1,0 +1,210 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-bottom: 1px solid #469b5f;
+  padding-bottom: 5px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+header .logo {
+  width: 9rem;
+  margin: 0px 0.5rem;
+  padding-top: 10px;
+}
+
+header h1 {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  color: #285443;
+  padding-top: 10px;
+  margin: 0px 4rem;
+  font-size: 1.5rem;
+}
+
+.content-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.content-container {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-top: 25px;
+}
+
+button {
+  padding: 5px 20px;
+  color: black;
+  background: rgba(6, 5, 5, 0);
+  border-radius: 4px;
+  border: 1px solid #757575;
+  cursor: pointer;
+}
+
+.create-form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.create-form .form-line {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.create-form .form-line [type="text"],
+.create-form .form-line [type="number"],
+.create-form .form-line [type="email"],
+.create-form .form-line [type="tel"] {
+  width: 200px;
+  margin-left: 20px;
+}
+
+.create-form .debitoradress {
+  margin-top: 10px;
+  position: relative;
+  right: 5px;
+}
+
+.create-form .debitoradress [type="checkbox"] {
+  margin-right: 10px;
+}
+
+.create-form .adress {
+  margin: 10px 0px;
+}
+
+nav {
+  margin-bottom: 25px;
+}
+
+nav button:first-of-type {
+  margin-right: 5px;
+}
+
+nav .active button {
+  background: #00904a;
+  color: white;
+  cursor: default;
+  border: 1px solid #00904a;
+}
+
+.table-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.table-wrapper h2 {
+  margin-bottom: 10px;
+}
+
+.table-content {
+  width: 99vw;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  overflow-x: auto;
+  -webkit-box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+          box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  margin-bottom: 10px;
+}
+
+table {
+  border-spacing: 0;
+  width: 100%;
+}
+
+table tr:last-child td {
+  border-bottom: 0;
+}
+
+table th,
+table td {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+table th:last-child,
+table td:last-child {
+  border-right: 0;
+}
+
+.CustomerNumber {
+  width: 100%;
+  border: 1px solid #858585;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  padding: 5px;
+}
+
+/* Tablet */
+@media only screen and (min-width: 767px) {
+  header {
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+  }
+}
+
+/* Desktop */
+@media only screen and (min-width: 851px) {
+  .table-content {
+    width: 99vw;
+  }
+}
+/*# sourceMappingURL=style.css.map */
