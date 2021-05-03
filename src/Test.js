@@ -1,140 +1,121 @@
-import React from "react";
-import { Formik, Field } from "formik";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Cookies from "universal-cookie";
+import { Formik, Field, Form, FieldArray } from "formik";
 import "./styles/style.css";
 import logo from "./images/Logo-line.png";
-import axios from "axios";
 
-function reload() {
-  window.location.reload();
+const cookies = new Cookies();
+
+function logOut() {
+  cookies.remove('mail');
+  window.location.reload()
 }
 
-class CreateUser extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      button: true,
-      customers: [],
-      number: "",
-    };
-    this.submitHandler = this.submitHandler.bind(this);
-  }
+const initialFormData = undefined;
 
-  handleClick(i) {
-    this.setState({
-      buttonSend: !this.state.button,
-    });
-  }
+export default function CustomerNumber() {
+  const [customers, setCustomers] = useState(initialFormData);
+  const [mail, setMail] = useState(cookies.get('mail'),)
 
-  componentDidMount() {
+  useEffect(() => {
     axios
-      .get(`http://10.10.0.54:6070/api/customer-creation?email=khk@alex-andersen.dk`).then((res) => {
-        const customers = res.data;
-        this.setState({ customers });
-      });
-  }
+      .get(`http://10.10.0.54:6070/api/customer-creation?email=${mail}`)
+      .then((todo) => setCustomers(todo.data))
+  }, []);
 
-  changeHandler = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  submitHandler = (e) => {
-    e.preventDefault();
-
-    axios
-      .put("http://10.10.0.54:6070/api/customer-creation?email=khk@alex-andersen.dk",
-        {
-          number: this.state.number
-        }
-      )
-      .then((respone) => {
-        console.log(respone);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    this.setState({ button: false });
-    // setTimeout(reload, 5000);
-  };
-
-  render() {
-    const buttonSending = this.state.button
-      ? "Send til oprettelse"
-      : "Sendt...";
-    const {
-      number
-    } = this.state;
-    return (
-      <>
-        <header>
-          <div>
-            <img className="logo" src={logo} />
-            <h1>Kundenummer</h1>
-          </div>
-        </header>
-
-        <div className="create-user content-wrapper">
-          <div className="content-container">
-            <h2>Kundeoprettelse</h2>
-
-            <Formik
-              initialValues={{
-                number: "0",
-              }}
-            >
-              {(props) => {
-                const {
-                  values,
-                  isSubmitting,
-                  handleChange,
-                  handleBlur,
-                } = props;
-
-                return (
-                  <form
-                    onSubmit={this.submitHandler}
-                    className="create-form"
-                  >
-                    <div className="form-line">
-                      <input
-                        id="number"
-                        placeholder="Number"
-                        type="number"
-                        name="number"
-                        value={values.number}
-                        onChange={this.handleChange}
-                        onBlur={handleBlur}
-                      />
-                    </div>
-
-                    <br/>
-                    <h2>Customers</h2>
-                    <br/>
-
-                    {this.state.customers.map(
-                      (customer) => (
-                          <div key={customer.id}>
-                            {customer.name_One} - {customer.address_One}
-                          </div>
-                      )
-                    )}
-                    <br/>
-
-                    <button
-                      className="submit"
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      {buttonSending}
-                    </button>
-                  </form>
-                );
-              }}
-            </Formik>
-          </div>
+  return (
+    <>
+      <header>
+        <div>
+          <img className="logo" src={logo} />
+          <h1>Kundenummer All
+          </h1>
         </div>
-      </>
-    );
-  }
-}
+        <h3 onClick={logOut}>Log ud</h3>
+      </header>
+      <div className="table-wrapper">
+        <h2>Tildel kundenummer</h2>
 
-export default CreateUser;
+
+        {customers && (
+          <Formik
+            initialValues={
+              customers
+            }
+            onSubmit={async (values) => {
+              await new Promise((r) => setTimeout(r, 500));
+              alert(JSON.stringify(values, null, 2));
+
+              axios
+                .put(
+                  `http://10.10.0.54:6070/api/customer-creation?email=${mail}`,
+                  values
+                )
+                .then((res) => {
+                  console.log(res.data);
+                });
+              console.log(customers.number[0])
+              //  window.location.reload();
+
+            }}
+          >
+            {(props) => {
+              const {
+                values,
+                isSubmitting,
+                handleChange,
+                handleBlur,
+                handleSubmit
+              } = props;
+              return (
+                <Form onSubmit={handleSubmit}>
+                  <div className="table-content">
+                    <div className="table">
+
+                      <FieldArray
+                        name="customers"
+                        render={(arrayHelpers) => (
+                          <div>
+                            {customers.map((friend, index) => (
+                              <div key={index}>
+                                {/** both these conventions do the same */}
+                                <Field name={`customers[${index}].name`} />
+                                <Field name={`customers.${index}.age`} />
+
+                                <button
+                                  type="button"
+                                  onClick={() => arrayHelpers.remove(index)}
+                                >
+                                  -
+                      </button>
+                              </div>
+                            ))}
+                            <button
+                              type="button"
+                              onClick={() => arrayHelpers.push({ name: "", age: "" })}
+                            >
+                              +
+                  </button>
+                          </div>
+                        )}
+                      />
+                      
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="add-number"
+                  >
+                    Tildel kundenumre
+                                    </button>
+                </Form>
+              )
+            }}
+          </Formik>
+        )}
+      </div>
+    </>
+  );
+}

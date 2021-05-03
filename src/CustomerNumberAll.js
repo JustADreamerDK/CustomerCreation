@@ -12,61 +12,6 @@ function logOut() {
     window.location.reload()
 }
 
-const data = [
-    {
-        "id": 1052,
-        "number": 0,
-        "name_One": "061046905",
-        "name_Two": "ja",
-        "address_One": "jeg",
-        "address_Two": "29",
-        "zipCode": "3560",
-        "city": "Odense",
-        "country": "CH",
-        "language": "DEU",
-        "ein": "43242",
-        "phone": "61046905",
-        "fax": "",
-        "mail": "fhnjaskl@jfilsa.dk",
-        "warehouseItemGroup": "DEFAULT",
-        "containerContact": "",
-        "isDebitor": true,
-        "customerGroupOne": "DEB-AASE",
-        "customerGroupTwo": "",
-        "reasonMandatory": "",
-        "mailTemplate": "",
-        "created": "2021-04-23T10:53:25.1902007",
-        "updated": null,
-        "isProcessed": false
-      },
-      {
-        "id": 1053,
-        "number": 0,
-        "name_One": "61046905",
-        "name_Two": "ja",
-        "address_One": "jeg",
-        "address_Two": "29",
-        "zipCode": "3560",
-        "city": "Odense",
-        "country": "DK",
-        "language": "DAN",
-        "ein": "43242",
-        "phone": "",
-        "fax": "",
-        "mail": "fhnjaskl@jfilsa.dk",
-        "warehouseItemGroup": "DEFAULT",
-        "containerContact": "",
-        "isDebitor": false,
-        "customerGroupOne": "",
-        "customerGroupTwo": "",
-        "reasonMandatory": "",
-        "mailTemplate": "",
-        "created": "2021-04-23T12:20:15.2517492",
-        "updated": null,
-        "isProcessed": false
-      }
-];
-
 const initialFormData = undefined;
 
 export default function CustomerNumber() {
@@ -78,10 +23,6 @@ export default function CustomerNumber() {
             .get(`http://10.10.0.54:6070/api/customer-creation?email=${mail}`)
             .then((todo) => setCustomers(todo.data))
     }, []);
-
-    function changeHandler(e) {
-        setCustomers({ [e.target.name]: e.target.value });
-      };
 
     return (
         <>
@@ -99,9 +40,17 @@ export default function CustomerNumber() {
 
                 {customers && (
                     <Formik
-                        initialValues={{
+                        initialValues={
                             customers
-                        }}
+                            //  || 
+                            // {
+                            //     "id": 1066,
+                            //     "number": "312",
+                            //     "country": "DK",
+                            //     "language": "DAN",
+                            //     "isProcessed": false
+                            // }
+                        }
                         onSubmit={async (values) => {
                             await new Promise((r) => setTimeout(r, 500));
                             alert(JSON.stringify(values, null, 2));
@@ -109,12 +58,21 @@ export default function CustomerNumber() {
                             axios
                                 .put(
                                     `http://10.10.0.54:6070/api/customer-creation?email=${mail}`,
-                                    [{ values }]
+                                    // [{
+                                    //     "id": values.id,
+                                    //     "number": values.number,
+                                    //     "country": values.country,
+                                    //     "language": values.language,
+                                    //     "isProcessed": values.isProcessed
+                                    // }]
+                                    values
                                 )
                                 .then((res) => {
                                     console.log(res.data);
                                 });
+                                // console.log(values.number)
                             //  window.location.reload();
+
                         }}
                     >
                         {(props) => {
@@ -122,11 +80,10 @@ export default function CustomerNumber() {
                                 values,
                                 isSubmitting,
                                 handleChange,
-                                handleBlur,
-                                handleSubmit
+                                handleSubmit,
                             } = props;
                             return (
-                                <Form>
+                                <Form onSubmit={handleSubmit}>
                                     <div className="table-content">
                                         <div className="table">
                                             <FieldArray name="customers">
@@ -156,28 +113,40 @@ export default function CustomerNumber() {
                                                                     customers.map((customer, index) => (
                                                                         <tr key={index}>
                                                                             <td>
-                                                                                Id: {customer.id}
+                                                                                Id: {customer.id} <br />
+                                                                                {`customers.${index}.number`}
                                                                                 <br />
                                                                                 {customer.number === 0 ?
                                                                                     <>
-                                                                                        {/* <Field
-                                                                                        name={`customers.${index}.number`}
-                                                                                        placeholder="Kundenummer"
-                                                                                        type="number"
-                                                                                        className="CustomerNumber"
-                                                                                    /> */}
-                                                                                        
-                                                                                        <input
+                                                                                        <Field
+                                                                                            id={`customers.${index}.id`}
+                                                                                            name={`customers.${index}.id`}
+                                                                                            placeholder="Kundenummer"
+                                                                                            type="number"
+                                                                                            className="CustomerNumber"
+                                                                                            onChange={handleChange}
+                                                                                            value={customer.id}
+                                                                                        />
+                                                                                        <Field
+                                                                                            id={`customers.${index}.number`}
+                                                                                            name={`customers.${index}.number`}
+                                                                                            placeholder="Kundenummer"
+                                                                                            type="number"
+                                                                                            className="CustomerNumber"
+                                                                                            onChange={handleChange}
+                                                                                            value={values.number}
+                                                                                        />
+
+                                                                                        {/* <input
                                                                                             id={`customers.${index}.number`}
                                                                                             name={`customers.${index}.number`}
                                                                                             className="CustomerNumber"
                                                                                             type="number"
-                                                                                            onChange={changeHandler}
-                                                                                            value={customers.values.number}
-                                                                                            min="1"
-                                                                                            max="999999999"
-                                                                                            required
-                                                                                        />
+                                                                                            onChange={handleChange}
+                                                                                            value="6"
+                                                                                        // min="1"
+                                                                                        // max="999999999"
+                                                                                        /> */}
                                                                                     </>
                                                                                     : "Number: " + customer.number}
                                                                             </td>
@@ -201,9 +170,36 @@ export default function CustomerNumber() {
                                                                             </td>
                                                                             <td>
                                                                                 {customer.country}
+                                                                                <Field
+                                                                                    id={`customers.${index}.country`}
+                                                                                    name={`customers.${index}.country`}
+                                                                                    placeholder="Kundenummer"
+                                                                                    type="text"
+                                                                                    className="CustomerNumber"
+                                                                                    onChange={handleChange}
+                                                                                    value={customer.country}
+                                                                                />
                                                                             </td>
                                                                             <td>
                                                                                 {customer.language == "DAN" ? "Dansk" : customer.language == "SVE" ? "Svensk" : customer.language == "NOR" ? "Norsk" : customer.language == "ENG" ? "Engelsk" : customer.language == "NLD" ? "Hollansk" : customer.language == "DEU" ? "Tysk" : customer.language == "FRA" ? "Fransk" : customer.language == "SPA" ? "Spansk" : customer.language == "ITA" ? "Italiensk" : customer.language == "PLK" ? "Polsk" : customer.language}
+                                                                                <Field
+                                                                                    id={`customers.${index}.language`}
+                                                                                    name={`customers.${index}.language`}
+                                                                                    placeholder="Kundenummer"
+                                                                                    type="text"
+                                                                                    className="CustomerNumber"
+                                                                                    onChange={handleChange}
+                                                                                    value={customer.language}
+                                                                                />
+                                                                                <Field
+                                                                                    id={`customers.${index}.isProcessed`}
+                                                                                    name={`customers.${index}.isProcessed`}
+                                                                                    placeholder="Kundenummer"
+                                                                                    type="text"
+                                                                                    className="CustomerNumber"
+                                                                                    onChange={handleChange}
+                                                                                    value={customer.isProcessed}
+                                                                                />
                                                                             </td>
                                                                             <td>
                                                                                 {customer.ein}
@@ -232,7 +228,13 @@ export default function CustomerNumber() {
                                             </FieldArray>
                                         </div>
                                     </div>
-                                    <button type="submit" className="add-number">Tildel kundenumre</button>
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="add-number"
+                                    >
+                                        Tildel kundenumre
+                                    </button>
                                 </Form>
                             )
                         }}
